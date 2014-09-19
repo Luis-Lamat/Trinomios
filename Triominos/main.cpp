@@ -2,19 +2,25 @@
 //  main.cpp
 //  Triominos
 //
-//  Created by Luis Alberto Lamadrid on 9/18/14.
-//  Copyright (c) 2014 Luis Alberto Lamadrid. All rights reserved.
-//
+//  Created by Luis Alberto Lamadrid &
+//             Jose Lozano
+//             on 9/18/14.
 
 #include <iostream>
-#include <cmath>
 using namespace std;
 
-// Global variable declaration
+/* GLOBAL VARIABLE DECLARATION */
 char mat[8][8];
 char paint = '@';
 
-// formula to calculate quadrant of two numbers
+/**
+ * which_quadrant
+ *
+ * Method that returns the quadrant of a given point in a matrix.
+ * The quadrant is relative to the size of the submatrix, that's
+ * why the size is a parameter.
+ *
+ */
 int which_quadrant(int x, int y, int size){
     int half = size/2;
     if (x < half){ if (y < half) return 1; else return 2; }
@@ -22,7 +28,14 @@ int which_quadrant(int x, int y, int size){
 }
 
 
-// recursive formula to fill matrix with l's
+/**
+ * trinomio
+ *
+ * Method that fills a square matrix which has a power of 2 size
+ * with 'L' shaped figures, and keeps the inital point that the
+ * user inputs.
+ *
+ */
 void triomino(int renI, int renF, int colI, int colF, int posX, int posY){
     
     //increase global paint variable
@@ -78,6 +91,8 @@ void triomino(int renI, int renF, int colI, int colF, int posX, int posY){
     }
 }
 
+/*-------------------------------MAIN METHOD----------------------------------*/
+
 int main()
 {
     // Initializing global matrix with '@'s
@@ -106,7 +121,7 @@ int main()
     // and the posotion of user input
     triomino(0, 7, 0, 7, posX, posY);
     
-    /* PRINTS MATRIX START */
+    /* PRINTS MATRIX STARTS */
     cout << endl;
     for (int i = 0; i < 8; ++i){
         for (int k = 0; k < 8; ++k){
@@ -115,7 +130,5 @@ int main()
     cout << endl;
     /* PRINTS MATRIX ENDS */
     
-    
     return 0;
 }
-
