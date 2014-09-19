@@ -7,17 +7,20 @@
 //
 
 #include <iostream>
+#include <cmath>
 using namespace std;
 
+// Global variable declaration
 char mat[8][8];
 char paint = '@';
 
 // formula to calculate quadrant of two numbers
 int which_quadrant(int x, int y, int size){
     int half = size/2;
-    if (x <= half){ if (y <= half) return 1; else return 2; }
-    else {          if (y <= half) return 3; else return 4; }
+    if (x < half){ if (y < half) return 1; else return 2; }
+    else {         if (y < half) return 3; else return 4; }
 }
+
 
 // recursive formula to fill matrix with l's
 void triomino(int renI, int renF, int colI, int colF, int posX, int posY){
@@ -46,7 +49,7 @@ void triomino(int renI, int renF, int colI, int colF, int posX, int posY){
         int colMid = (colF+colI)/2;
         
         // calculate quadrant of occupied square
-        int q = which_quadrant(posX, posY, renF);
+        int q = which_quadrant(posX-renI, posY-colI, (colF - colI)+1);
         
         // declarin booleans to check if occupied square is in quadrant
         bool q1 = (q == 1); bool q2 = (q == 2);
@@ -58,21 +61,26 @@ void triomino(int renI, int renF, int colI, int colF, int posX, int posY){
         if(!q3) mat[renMid+1][colMid] = paint;
         if(!q4) mat[renMid+1][colMid+1] = paint;
         
-        // "(q1)?posX:renMid":
-        // ternary operators to see which
-        // variable gets passed as param
+        // "(q1)?posX:renMid" => ternary operators to see which
+        //                       variable gets passed as param
         
         triomino(renI, renMid, colI, colMid,
-                 (q1)?posX:renMid , (q1)?posX:colMid);  // Quadrant 1
+                 (q1)?posX:renMid , (q1)?posY:colMid);     // Quadrant 1
         
         triomino(renI, renMid, colMid+1, colF,
-                 (q2)?posX:renMid , (q2)?posX:colMid+1);  // Quadrant 2
+                 (q2)?posX:renMid , (q2)?posY:colMid+1);   // Quadrant 2
+        
+        triomino(renMid+1, renF, colI, colMid,
+                 (q3)?posX:renMid+1 , (q3)?posY:colMid);   // Quadrant 3
+        
+        triomino(renMid+1, renF, colMid+1, colF,
+                 (q4)?posX:renMid+1 , (q4)?posY:colMid+1); // Quadrant 3
     }
 }
 
 int main()
 {
-    // Initializing matrix with '@'s
+    // Initializing global matrix with '@'s
     for (int i = 0; i < 8; ++i) {
         for (int k = 0; k < 8; ++k) {
             mat[i][k] = '@';}
@@ -94,7 +102,8 @@ int main()
     paint++;
     mat[posX][posY] = paint;
     
-    // L painting method call
+    // L painting method call with square matrix size
+    // and the posotion of user input
     triomino(0, 7, 0, 7, posX, posY);
     
     /* PRINTS MATRIX START */
