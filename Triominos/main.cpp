@@ -27,18 +27,19 @@ void triomino(int renI, int renF, int colI, int colF, int posX, int posY){
     
     // base case, paint L shaped figure...
     if (renF - renI == 1 && colF - colI == 1) {
-        if (mat[renI][renF] == '@')
-            mat[renI][renF] = paint;
-        if (mat[renI+1][renF] == '@')
-            mat[renI+1][renF] = paint;
-        if (mat[renI][renF+1] == '@')
-            mat[renI][renF+1] = paint;
-        if (mat[renI+1][renF+1] == '@')
-            mat[renI+1][renF+1] = paint;
+        if (mat[renI][colI] == '@')
+            mat[renI][colI] = paint;
+        if (mat[renI][colI+1] == '@')
+            mat[renI][colI+1] = paint;
+        if (mat[renI+1][colI] == '@')
+            mat[renI+1][colI] = paint;
+        if (mat[renI+1][colI+1] == '@')
+            mat[renI+1][colI+1] = paint;
+        return;
     }
     
     // if the square matrix is not 2 X 2
-    else {
+    else if (!(renF == renI || colF == colI)) {
         
         // calculate middle row and column
         int renMid = (renF+renI)/2;
@@ -47,14 +48,26 @@ void triomino(int renI, int renF, int colI, int colF, int posX, int posY){
         // calculate quadrant of occupied square
         int q = which_quadrant(posX, posY, renF);
         
+        // declarin booleans to check if occupied square is in quadrant
+        bool q1 = (q == 1); bool q2 = (q == 2);
+        bool q3 = (q == 3); bool q4 = (q == 4);
+        
         // paint L in center if quadrant is not the same as position
-        if(q != 1) mat[renMid][colMid] = paint;
-        if(q != 2) mat[renMid][colMid+1] = paint;
-        if(q != 3) mat[renMid+1][colMid] = paint;
-        if(q != 4) mat[renMid+1][colMid+1] = paint;
+        if(!q1) mat[renMid][colMid] = paint;
+        if(!q2) mat[renMid][colMid+1] = paint;
+        if(!q3) mat[renMid+1][colMid] = paint;
+        if(!q4) mat[renMid+1][colMid+1] = paint;
+        
+        // "(q1)?posX:renMid":
+        // ternary operators to see which
+        // variable gets passed as param
+        
+        triomino(renI, renMid, colI, colMid,
+                 (q1)?posX:renMid , (q1)?posX:colMid);  // Quadrant 1
+        
+        triomino(renI, renMid, colMid+1, colF,
+                 (q2)?posX:renMid , (q2)?posX:colMid+1);  // Quadrant 2
     }
-    
-    return;
 }
 
 int main()
