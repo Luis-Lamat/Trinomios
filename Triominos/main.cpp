@@ -13,14 +13,47 @@ char mat[8][8];
 char paint = '@';
 
 // formula to calculate quadrant of two numbers
-int which_quadrant(int a, int b, int size){
+int which_quadrant(int x, int y, int size){
     int half = size/2;
-    if (a <= half){ if (b <= half) return 1; else return 2; }
-    else {          if (b <= half) return 3; else return 4; }
+    if (x <= half){ if (y <= half) return 1; else return 2; }
+    else {          if (y <= half) return 3; else return 4; }
 }
 
 // recursive formula to fill matrix with l's
-void triomino(int renI, int renF, int colI, int colF, int posY, int posX){
+void triomino(int renI, int renF, int colI, int colF, int posX, int posY){
+    
+    //increase global paint variable
+    paint++;
+    
+    // base case, paint L shaped figure...
+    if (renF - renI == 1 && colF - colI == 1) {
+        if (mat[renI][renF] == '@')
+            mat[renI][renF] = paint;
+        if (mat[renI+1][renF] == '@')
+            mat[renI+1][renF] = paint;
+        if (mat[renI][renF+1] == '@')
+            mat[renI][renF+1] = paint;
+        if (mat[renI+1][renF+1] == '@')
+            mat[renI+1][renF+1] = paint;
+    }
+    
+    // if the square matrix is not 2 X 2
+    else {
+        
+        // calculate middle row and column
+        int renMid = (renF+renI)/2;
+        int colMid = (colF+colI)/2;
+        
+        // calculate quadrant of occupied square
+        int q = which_quadrant(posX, posY, renF);
+        
+        // paint L in center if quadrant is not the same as position
+        if(q != 1) mat[renMid][colMid] = paint;
+        if(q != 2) mat[renMid][colMid+1] = paint;
+        if(q != 3) mat[renMid+1][colMid] = paint;
+        if(q != 4) mat[renMid+1][colMid+1] = paint;
+    }
+    
     return;
 }
 
@@ -34,15 +67,22 @@ int main()
     
     // Declaration of user input variables &
     // Input of said variables
-    int a,b;
+    int posX,posY;
     cout << "Introduce las coordenadas del cuadro base (0-7) :  ";
-    cin >> a >> b;
+    cin >> posX >> posY;
 
     // Don't let user through if variables are in invalid range
-    while ((a < 0 || a > 7) || (b < 0 || b > 7)) {
+    while ((posX < 0 || posX > 7) || (posY < 0 || posY > 7)) {
         cout << "Números inválidos, intente de nuevo (0-7): ";
-        cin >> a >> b;
+        cin >> posX >> posY;
     }
+
+    // increase paint char and paint the spot the user inputs
+    paint++;
+    mat[posX][posY] = paint;
+    
+    // L painting method call
+    triomino(0, 7, 0, 7, posX, posY);
     
     /* PRINTS MATRIX START */
     cout << endl;
@@ -53,7 +93,6 @@ int main()
     cout << endl;
     /* PRINTS MATRIX ENDS */
     
-    cout << which_quadrant(3, 3, 8) << endl;
     
     return 0;
 }
